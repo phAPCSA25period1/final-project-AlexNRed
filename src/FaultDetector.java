@@ -1,14 +1,24 @@
 import java.util.ArrayList;
 
 public class FaultDetector {
+    // declared a Grid calling it grid, and a voltageThreshold
     private Grid grid;
     private double voltageThreshold;
 
+    /**
+     * creates a faultDetector object
+     * @param grid the power grid network
+     * @param voltageThreshold the voltage limit to detect a fault
+     */
     public FaultDetector(Grid grid, double voltageThreshold) {
         this.grid = grid;
         this.voltageThreshold = voltageThreshold;
     }
 
+    /**
+     * 
+     * @return
+     */
     public ArrayList<GridNode> detectFaults() {
         ArrayList<GridNode> faults = new ArrayList<>();
         GridNode[][] nodes = grid.getNodes();

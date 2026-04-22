@@ -67,7 +67,7 @@ public class GridSimulator {
 
 
         scan.close();
-        
+
     }
 
         // manually setting a fault
@@ -80,7 +80,7 @@ public class GridSimulator {
 
     private static void voltrandomizer(Grid grid, Random random) {
         double max = 130.0;
-        double min = 0.0;
+        double min = 85.0;
 
         GridNode[][] nodes = grid.getNodes();
 
