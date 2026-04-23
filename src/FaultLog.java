@@ -20,7 +20,7 @@ public class FaultLog {
     /**
      * logs each event through getting the node, the time, and what happened to the node
      * @param node gets the specific node and prints it out in strin
-     * @param severity used to create a 
+     * @param severity used to create a
      */
     public void logEvent(GridNode node, int severity) {
         String nodeId = "R" + node.getRow() + " C" + node.getCol();
@@ -32,6 +32,9 @@ public class FaultLog {
         events.add(event);
     }
 
+    /**
+     * prints all fault errors after the simulation is done.
+     */
     public void printLog() {
         System.out.println("---- Fault Log ----");
         if (events.isEmpty()) {
@@ -49,22 +52,39 @@ public class FaultLog {
         }
     }
 
+    /**
+     * gets the events of the fault
+     * @return events
+     */
     public ArrayList<FaultEvent> getEvents() {
         return events;
     }
 
+    /**
+     * gets the count of the arrayList that holds the event objects
+     * @return events.size();
+     */
     public int getEventCount() {
         return events.size();
     }
 
+    /**
+     * clears the arrayList
+     */
     public void clearLog() {
         events.clear();
     }
 
+    /**
+     * each time that a fault is detected, it will add to the total amount of faults Detected
+     */
     public void addToTotalFaults() {
         totalFaultsDetected++;
     }
 
+    /**
+     * (WIP)
+     */
     public void addToTotalNodesRerouted() {
         totalNodesRerouted++;
     }

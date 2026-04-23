@@ -16,8 +16,9 @@ public class FaultDetector {
     }
 
     /**
-     * 
-     * @return
+     * method that detectsFaults
+     * creates a arrayList that holds GridNodes called Faults and creates a 2D array of GridNodes called nodes.
+     * @return ArrayList<GridNode>
      */
     public ArrayList<GridNode> detectFaults() {
         ArrayList<GridNode> faults = new ArrayList<>();
@@ -42,6 +43,11 @@ public class FaultDetector {
         return faults;
     }
 
+    /**
+     * finds all the adjacent Nodes that are right next to the node. for example if the nodes is at posiiton (1,1), it will get all the adjacent nodes, so up down, left and right.
+     * @param node the node that we want to find adjacent nodes near it.
+     * @return ArrayList<GridNode>
+     */
     public ArrayList<GridNode> getAdjacentNodes(GridNode node) {
         ArrayList<GridNode> neighbors = new ArrayList<>();
         int row = node.getRow();
