@@ -70,4 +70,20 @@ public class FaultDetector {
         }
         return neighbors;
     }
+
+    /*public int rerouteAround(GridNode faultNode) {
+        int w = 0;
+
+        ArrayList<GridNode> visited = new ArrayList<>();
+
+        ArrayList<GridNode> queue = new ArrayList<>();
+
+        ArrayList<GridNode> neighbors = getAdjacentNodes(faultNode);
+        for (GridNode neighor : neighbors) {
+            if (!visited.contains(neighbor)) {
+
+            }
+        }
+        return w;
+    }*/
 }

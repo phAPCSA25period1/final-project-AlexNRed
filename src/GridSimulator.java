@@ -46,7 +46,7 @@ public class GridSimulator {
         try {
             TimeUnit.SECONDS.sleep(2);
             for (int tick = 1; tick <= seconds; tick++) {
-                simulation(grid, detector, log, random);
+                simulation(grid, detector, log, random, seconds);
                 TimeUnit.SECONDS.sleep(1);
 
 
@@ -100,7 +100,7 @@ public class GridSimulator {
         }
     }
 
-    private static void simulation(Grid grid, FaultDetector detector, FaultLog faultLog, Random random) {
+    private static void simulation(Grid grid, FaultDetector detector, FaultLog faultLog, Random random, int tickNum) {
 
             grid.resetActiveNodes();
 
@@ -110,12 +110,12 @@ public class GridSimulator {
 
             for (GridNode fault : faults) {
                 faultLog.logEvent(fault, 1);
-                detector.getAdjacentNodes(fault);
                 faultLog.addToTotalFaults();
-                faultLog.addToTotalNodesRerouted();
             }
 
             grid.printGrid();
+
+
 
             System.out.println("Faults this tick: " + faults.size());
 
