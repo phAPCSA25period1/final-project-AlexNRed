@@ -126,10 +126,25 @@ public class GridSimulator {
 
 
             System.out.println("Faults this tick: " + faults.size());
-
+            System.out.println("Grid Health: " + getGridHealth(grid) + "%");
 
             System.out.println();
+    }
 
+    private static int getGridHealth(Grid grid) {
+        int active = 0;
+        int total = grid.getRows() * grid.getCols();
+        GridNode[][] nodes = grid.getNodes();
 
+        for (int r = 0; r < grid.getRows(); r++) {
+            for (int c = 0; c < grid.getCols(); c++) {
+                NodeState s = nodes[r][c].getState();
+                if (s == NodeState.ACTIVE || s == NodeState.REROUTED) {
+                    active++;
+                }
+            }
+        }
+
+        return (int)((active /  (double) total ) * 100);
     }
 }
