@@ -71,19 +71,38 @@ public class FaultDetector {
         return neighbors;
     }
 
-    /*public int rerouteAround(GridNode faultNode) {
-        int w = 0;
+    public int rerouteAround(GridNode faultNode) {
+        int rerouted = 0;
 
         ArrayList<GridNode> visited = new ArrayList<>();
 
         ArrayList<GridNode> queue = new ArrayList<>();
 
-        ArrayList<GridNode> neighbors = getAdjacentNodes(faultNode);
-        for (GridNode neighor : neighbors) {
+        ArrayList<GridNode> startNeighbors = getAdjacentNodes(faultNode);
+        for (GridNode neighbor : startNeighbors) {
             if (!visited.contains(neighbor)) {
-
+                queue.add(neighbor);
+                visited.add(neighbor);
             }
         }
-        return w;
-    }*/
+
+        while (!queue.isEmpty()) {
+            GridNode current = queue.get(0);
+
+            if (current.getState() == NodeState.ACTIVE) {
+                current.setTheState(NodeState.REROUTED);
+                rerouted++;
+            }
+
+             // spread the ripple outward to this node's neighbors
+            ArrayList<GridNode> neighbors = getAdjacentNodes(current);
+            for (GridNode neighbor : neighbors) {
+                if (!visited.contains(neighbor)) {
+                    queue.add(neighbor);
+                    visited.add(neighbor);
+                }
+            }
+        }
+        return rerouted;
+    }
 }
