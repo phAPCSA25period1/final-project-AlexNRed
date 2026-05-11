@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class GridSimulator {
         public static void main(String[] args) {
@@ -91,31 +92,9 @@ public class GridSimulator {
             }
 
             Grid grid = new Grid (gridSize, gridSize);
-            FaultDetector faultDetector = new FaultDetector(grid, threshold);
-
-
-
-
-
-            /*
-            Grid grid = new Grid(5, 5);
-            FaultDetector detector = new FaultDetector(grid, 90);
+            FaultDetector detector = new FaultDetector(grid, threshold);
             FaultLog log = new FaultLog();
 
-            System.out.print("How many seconds would you like the simulation to run? (30, 60, 90 seconds)");
-            int seconds = scan.nextInt();
-
-            System.out.println("Starting sim for " + seconds + " seconds: ");
-
-
-
-            // Print the voltage of the node at (2, 3)
-            //GridNode node = grid.getNode(2, 3);
-            //System.out.println("Voltage at (2, 3): " + node.getVoltage() + " volts");
-
-            // Set the state of the node at (2, 3) to FAULT
-            //node.setTheState(NodeState.FAULT);
-            //System.out.println("State at (2, 3): " + node.getState());
 
             // this essentially creates a powerline between all the nodes horizontally and vertically, connection each one together.
             for (int row = 0; row < 5; row++) {
@@ -133,9 +112,11 @@ public class GridSimulator {
 
 
             try {
+
                 TimeUnit.SECONDS.sleep(2);
-                for (int tick = 1; tick <= seconds; tick++) {
-                    simulation(grid, detector, log, random, tick, seconds);
+
+                for (int tick = 1; tick <= totalTicks; tick++) {
+                    simulation(grid, detector, log, random, tick, totalTicks);
                     TimeUnit.SECONDS.sleep(1);
 
 
@@ -144,7 +125,7 @@ public class GridSimulator {
 
                 System.out.println("\n=== Simulation complete ===");
                 TimeUnit.SECONDS.sleep(1);
-                System.out.println("Total ticks run: " + seconds);
+                System.out.println("Total ticks run: " + totalTicks);
                 System.out.println();
                 TimeUnit.SECONDS.sleep(1);
                 log.printLog();
@@ -156,7 +137,7 @@ public class GridSimulator {
 
 
             scan.close();
-            */
+
         }
 
             // manually setting a fault
@@ -237,7 +218,7 @@ public class GridSimulator {
 
                 System.out.println();
 
-                
+
         }
 
         private static int getGridHealth(Grid grid) {
