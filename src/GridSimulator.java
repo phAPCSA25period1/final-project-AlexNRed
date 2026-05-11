@@ -116,18 +116,46 @@ public class GridSimulator {
                 TimeUnit.SECONDS.sleep(2);
 
                 for (int tick = 1; tick <= totalTicks; tick++) {
+
                     simulation(grid, detector, log, random, tick, totalTicks);
+
                     TimeUnit.SECONDS.sleep(1);
 
+                    if (repairTokens > 0) {
+                        System.out.println("Repair tokens remaining: " + repairTokens);
+                        System.out.print("Use a repair token? (y/n): ");
+                        String repairChoice = scan.nextLine();
 
+                        if (repairChoice.equalsIgnoreCase("y")) {
+                            System.out.print("Enter node to repair (row col): ");
+                            int repairRow = scan.nextInt();
+                            int repairCol = scan.nextInt();
+                            scan.nextLine();
+
+                            GridNode target = grid.getNode(repairRow, repairCol);
+
+                            if (target.getState() == NodeState.FAULT) {
+                                target.setTheState(NodeState.ACTIVE);
+                                repairTokens--;
+                                System.out.println("Node R" + repairRow + "C" + repairCol + " repaired. Tokens left: " + repairTokens);
+                                log.addToTotalNodesRerouted();
+                            } else {
+                                System.out.println("Node is not faulted");
+                            }
+                        }
+                    } else {
+                        System.out.println("You have no more repair Tokens");
+                    }
+
+                    TimeUnit.SECONDS.sleep(1);
                 }
 
 
                 System.out.println("\n=== Simulation complete ===");
-                TimeUnit.SECONDS.sleep(1);
-                System.out.println("Total ticks run: " + totalTicks);
-                System.out.println();
-                TimeUnit.SECONDS.sleep(1);
+                TimeUnit.SECONDS.sleep(2);
+                clearScreen();
+                endGame(gridName, log, totalTicks, grid);
+                TimeUnit.SECONDS.sleep(2);
                 log.printLog();
 
 
@@ -140,12 +168,10 @@ public class GridSimulator {
 
         }
 
-            // manually setting a fault
-            //grid.getNode(2,3).setTheState(NodeState.FAULT);
-            //double volt = grid.getNode(2,3).getVoltage();
 
-            //System.out.println(volt);
-            //grid.printGrid();
+
+
+
 
         private static String getDifficulty(int choice) {
             switch (choice) {
@@ -236,5 +262,41 @@ public class GridSimulator {
             }
 
             return (int)((active /  (double) total ) * 100);
+        }
+
+        private static void endGame(String gridName, FaultLog log, int totalTicks, Grid grid) {
+            int health = getGridHealth(grid);
+            int faults = log.getEventCount();
+
+            int score = health;
+            if (faults == 0) {
+                score = 100;
+            }
+
+            String grade;
+
+            if (score >= 90) {
+                grade = "S";
+            } else if (score >= 75) {
+                grade = "A";
+            } else if (score >= 60) {
+                grade = "B";
+            } else if (score >= 45) {
+                grade = "C";
+            } else {
+                grade = "F";
+            }
+
+            System.out.println("=========================================");
+            System.out.println("         " + gridName.toUpperCase() + " — FINAL REPORT");
+            System.out.println("=========================================");
+            System.out.println();
+            System.out.println("  Ticks survived    : " + totalTicks);
+            System.out.println("  Final grid health : " + health + "%");
+            System.out.println("  Total faults      : " + faults);
+            System.out.println();
+            System.out.println("  Performance grade : " + grade);
+            System.out.println();
+            System.out.println("=========================================");
         }
     }
