@@ -196,6 +196,11 @@ public class GridSimulator {
             }
         }
 
+        /**
+         * clears the terminal screen using an ANSI escape code
+         * had to search this up, learned how .flush() forces any
+         * data in memory to be written immediately
+         */
         private static void clearScreen() {
             System.out.print("\033[H\033[2J");
             System.out.flush();
@@ -275,8 +280,11 @@ public class GridSimulator {
         }
 
         /**
+         * calculates the health of the grid as a percentage at the
+         * specific tick. Counts nodes that are active or rerouted as non-faulty,
+         * meaning they don't decrease the health of the grid
          * @param grid the power grid
-         * 
+         * @return grid health as an integer percentage from 0 to 100
          */
         private static int getGridHealth(Grid grid) {
             int active = 0;
@@ -295,6 +303,14 @@ public class GridSimulator {
             return (int)((active /  (double) total ) * 100);
         }
 
+        /**
+         * displays the user's performance report at the end of all the ticks
+         * and gives a letter score based on the final grid health and
+         * @param gridName name the player gave their grid
+         * @param log the fault log containing all recorded events
+         * @param totalTicks the total number of ticks the sim ran for
+         * @param grid the power grid in its final state
+         */
         private static void endGame(String gridName, FaultLog log, int totalTicks, Grid grid) {
             int health = getGridHealth(grid);
             int faults = log.getEventCount();
