@@ -6,6 +6,7 @@ public class GridNode {
     private double voltage;
     private double load;
     private NodeState state; // An enum to represent the state of the node
+    private int immuneTicks = 0;
 
     /**
     * the constructor to create a GridNode. Takes in row, col, the voltage, and the state of a gridNode
@@ -78,6 +79,31 @@ public class GridNode {
             case ISOLATED:
                 this.voltage = 0.0;       // deliberately cut off — also zero
                 break;
+        }
+    }
+
+    /**
+     * grants the specific gridNode immunity from faults for a set number of ticks
+     * @param immuneTicks
+    */
+    public void grantImmunity(int immuneTicks) {
+        this.immuneTicks = immuneTicks;
+    }
+
+    /**
+     * checks whether the gridNode currently has immunity
+     * @return true if the node current has immunity
+     */
+    public boolean isImmune() {
+        return immuneTicks > 0;
+    }
+
+    /**
+     * decreases the immunity counter by 1
+     */
+    public void tickImmunity() {
+        if (isImmune()) {
+            immuneTicks--;
         }
     }
 }

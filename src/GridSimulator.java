@@ -47,24 +47,29 @@ public class GridSimulator {
             // difficulty
             System.out.println("Select Difficulty");
             System.out.println("1. Easy");
-            System.out.println("1. Medium");
-            System.out.println("1. Hard");
+            System.out.println("2. Medium");
+            System.out.println("3. Hard");
             System.out.println("Choice (1-3): ");
             int choice  = scan.nextInt();
             double threshold;
             int repairTokens;
+            double voltMin;
+
             switch (choice) {
                 case 1:
                     threshold = 80.0;
                     repairTokens = 5;
+                    voltMin = 76.0;
                     break;
                 case 3:
                     threshold = 100.0;
                     repairTokens = 1;
+                    voltMin = 84.0;
                     break;
                 default:
                     threshold = 90.0;
                     repairTokens = 3;
+                    voltMin = 80.0;
                     break;
             }
             System.out.println();
@@ -97,14 +102,14 @@ public class GridSimulator {
 
 
             // this essentially creates a powerline between all the nodes horizontally and vertically, connection each one together.
-            for (int row = 0; row < 5; row++) {
-                for (int col = 0; col < 4; col++) {
+            for (int row = 0; row < gridSize; row++) {
+                for (int col = 0; col < gridSize - 1; col++) {
                     grid.addPowerLine(grid.getNode(row, col), grid.getNode(row, col + 1), 50.0);
                 }
             }
 
-            for (int col = 0; col < 5; col++) {
-                for (int row = 0; row < 4; row++) {
+            for (int col = 0; col < gridSize; col++) {
+                for (int row = 0; row < gridSize - 1; row++) {
                     grid.addPowerLine(grid.getNode(row, col), grid.getNode(row + 1, col), 50.0);
                 }
             }
@@ -117,13 +122,15 @@ public class GridSimulator {
 
                 for (int tick = 1; tick <= totalTicks; tick++) {
 
-                    simulation(grid, detector, log, random, tick, totalTicks);
+
+                    simulation(grid, detector, log, random, tick, totalTicks, threshold, voltMin);
 
                     TimeUnit.SECONDS.sleep(1);
 
                     if (repairTokens > 0) {
                         System.out.println("Repair tokens remaining: " + repairTokens);
                         System.out.print("Use a repair token? (y/n): ");
+                        System.out.flush();
                         String repairChoice = scan.nextLine();
 
                         if (repairChoice.equalsIgnoreCase("y")) {
@@ -136,6 +143,7 @@ public class GridSimulator {
 
                             if (target.getState() == NodeState.FAULT) {
                                 target.setTheState(NodeState.ACTIVE);
+                                target.grantImmunity(tick);
                                 repairTokens--;
                                 System.out.println("Node R" + repairRow + "C" + repairCol + " repaired. Tokens left: " + repairTokens);
                                 log.addToTotalNodesRerouted();
@@ -172,7 +180,11 @@ public class GridSimulator {
 
 
 
-
+        /**
+         * gets the difficulty set by the user
+         * @param choice
+         * @return difficulty choice
+         */
         private static String getDifficulty(int choice) {
             switch (choice) {
                 case 1:
@@ -189,10 +201,14 @@ public class GridSimulator {
             System.out.flush();
         }
 
-
-        private static void voltrandomizer(Grid grid, Random random) {
+        /**
+         * randomizes the voltage of every node each tick, and different for each difficulty
+         * @param grid the power grid where the node voltages are updated at
+         * @param random use the random class to generate random voltages
+         * @param voltMin the minimum voltage possible for each difficulty
+         */
+        private static void voltrandomizer(Grid grid, Random random, double voltMin) {
             double max = 130.0;
-            double min = 85.0;
 
             GridNode[][] nodes = grid.getNodes();
 
@@ -201,26 +217,39 @@ public class GridSimulator {
                     GridNode node = nodes[row][col];
 
                     if (node.getState() == NodeState.ISOLATED ||
-                        node.getState() == NodeState.FAULT) {
+                        node.getState() == NodeState.FAULT ||
+                        node.isImmune() ) {
                         continue;
                     }
 
 
-                    double fault = (random.nextDouble() * (max - min)) + min;
+                    double fault = (random.nextDouble() * (max - voltMin)) + voltMin;
                     node.setVoltage(fault);
                 }
             }
         }
 
-        private static void simulation(Grid grid, FaultDetector detector, FaultLog faultLog, Random random, int tickNum, int totalTicks) {
+        /**
+         * basically one full simulation tick
+        * @param detector the fault detector that scans and reroutes the grid
+        * @param faultLog the log that records every fault event
+        * @param random uses random class for voltrandomizer
+        * @param tickNum the current tick number
+        * @param totalTicks the total number of ticks in this simulation run
+        * @param threshold the voltage below which a node is considered faulted
+        * @param voltMin the minimum voltage generated this tick set by difficulty
 
-                clearScreen();
+         */
+        private static void simulation(Grid grid, FaultDetector detector, FaultLog faultLog, Random random, int tickNum, int totalTicks, double threshold, double voltMin) {
+
+
 
                 System.out.println("=== Tick " + tickNum + " / " + totalTicks + " ===");
 
                 grid.resetActiveNodes();
+                grid.tickImmunity();
 
-                voltrandomizer(grid, random);
+                voltrandomizer(grid, random, voltMin);
 
                 ArrayList<GridNode> faults = detector.detectFaults();
 
@@ -237,8 +266,6 @@ public class GridSimulator {
 
                 grid.printGrid();
 
-
-
                 System.out.println("Faults this tick: " + faults.size());
                 System.out.println("Grid Health: " + getGridHealth(grid) + "%");
 
@@ -247,6 +274,10 @@ public class GridSimulator {
 
         }
 
+        /**
+         * @param grid the power grid
+         * 
+         */
         private static int getGridHealth(Grid grid) {
             int active = 0;
             int total = grid.getRows() * grid.getCols();

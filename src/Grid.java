@@ -120,4 +120,16 @@ public class Grid {
             }
         }
     }
+
+    /**
+     * decreases the immunity counter on every node in the grid by one each tick
+     * called at the start of each simulation to ensure the no node if they do, has immunity forever
+     */
+    public void tickImmunity() {
+        for (int r = 0; r < getRows(); r++) {
+            for (int c = 0; c < getCols(); c++) {
+                nodes[r][c].tickImmunity();
+            }
+        }
+    }
 }
