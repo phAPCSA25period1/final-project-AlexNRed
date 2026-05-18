@@ -83,7 +83,8 @@ public class FaultLog {
     }
 
     /**
-     * (WIP)
+     * increments the total count of nodes that have been
+     * sucessfully rerouted
      */
     public void addToTotalNodesRerouted() {
         totalNodesRerouted++;

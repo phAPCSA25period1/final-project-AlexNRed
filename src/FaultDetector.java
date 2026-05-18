@@ -71,8 +71,14 @@ public class FaultDetector {
         return neighbors;
     }
 
-    
 
+    /**
+     * reroutes the power around a faulted node by marking its direct
+     * neighbors as rerouted and only the neighbors that are currently
+     * active get rerouted
+     * @param faultNode the node that has failed and needs to be rerouted
+     * @return the number of nodes sucessfully rerouted
+     */
     public int rerouteAround(GridNode faultNode) {
         int rerouted = 0;
 
