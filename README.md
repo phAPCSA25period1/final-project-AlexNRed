@@ -48,6 +48,9 @@ Print the grid and offer the player a repair token
 
 Class Diagram:
 
+<img width="673" height="1032" alt="Untitled Diagram drawio" src="https://github.com/user-attachments/assets/db5f524f-a9d7-48c3-9d43-96c18711a30a" />
+
+
 Future Improvements
 If I had more time, I would've definitely made a tutorial and more game like since it's kind of bare bones and I would've liked to add a weather system that affects the nodes like it might rain which would increase the chance of the node going faulty.
 
