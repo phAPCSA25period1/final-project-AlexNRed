@@ -1,189 +1,53 @@
 [![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=23542247)
-# AP Computer Science A – Final Project
-## Software & Systems Development Capstone
 
-Welcome to your **Final Project repository**.
+Smart Grid Fault Simulator
 
-This repository will hold:
-- Your complete Java project
-- Your project journal and planning artifacts
-- Your final, working software product
+What This Project does
+The Smart Grid Fault Simulator is a terminal based simulation that models a city's power grid through ticks. Each Tick randomizes node voltages across the grid and when the voltage drops below a certain threshold, the node goes into a FAULT state. This triggers for it's neighboring nodes to be rerouted and the event is logged. The player can spend repair tokens to restore faulted nodes, but use them wisely because they are limited.
 
-This is not just an assignment — it is a **capstone software project**.
+Who It's For
+the project is intended for anyone who is curious and wants to learn more about how power-grid fault detection and rerouting logic works. 
 
----
+How to Run the Program
+to run the program, you would simply have to run it through the terminal
 
-## 📌 Project Overview (Read Carefully)
+Technical Overview:
+Main classes:
+GridSimulator — Main which handles all user input, drives the simulation loop, and calls endGame() to display the final report
 
-In this project, you will:
-- Design and build a **real piece of software**
-- Solve **one real problem** for **one clearly defined user**
-- Work using **agile development**
-- Show evidence of **professional software practices**
-- Use AI responsibly as a planning and support tool
+Grid — Owns the 2D array of GridNode objects and the ArrayList<PowerLine> and responsible for resetting active nodes and ticking immunity each round
 
-You will leave this course with something you can confidently say:
+GridNode — Represents a single node (house) in the grid and tracks position, voltage, state, and immunity ticks. Voltage is automatically adjusted when state changes through setTheState()
 
-> “I built this software.”
+NodeState — Enum with four values: ACTIVE, FAULT, ISOLATED, REROUTED
 
----
+FaultDetector — Scans the grid for under-threshold active nodes, promotes them to FAULT, and reroutes their active neighbors
 
-## 🔁 Required Workflow (How You Must Work)
+FaultLog — Records FaultEvent objects, tracks total faults and reroutes, and prints the end-of-session log
 
-### ✅ Daily GitHub Commits (Required)
-You are expected to:
-- Make **at least one meaningful commit every class day**
-- Write **descriptive commit messages** that explain:
-  - What you changed
-  - Why you changed it
-  - What goal it supports
+FaultEvent — record of a single fault: node ID, timestamp, severity, and description
 
-✅ Good commit messages:
-- `Sprint 1: Created Player class and tested constructor`
-- `Sprint 2: Implemented 2D map and verified movement logic`
+PowerLine — Connects two GridNode objects with a capacity value and can be changed to active/inactive
 
-🚫 Poor commit messages:
-- `updates`
-- `stuff`
-- `final version`
+Key data structures:
 
-Your commit history is **evidence of your thinking and progress**.
+GridNode[][] nodes inside Grid — the core 2D array that represents the city grid
 
----
+ArrayList<PowerLine> lines — adjacent list of power connections
 
-## 🔁 Agile Development & Sprints
+ArrayList<FaultEvent> events inside FaultLog which are ordered by event history
 
-You will complete **4 sprints**.  
-Each sprint includes:
-- Planning
-- Building
-- Testing
-- Feedback and reflection
+Program logic per tick:
 
-Each sprint ends with:
-- A sprint grade
-- A sprint reflection
-- Feedback exchanged with peers
+Reset all non-isolated nodes to ACTIVE
+Tick down immunity counters
+Randomize voltages within the difficulty-defined range
+FaultDetector.detectFaults() flags under-threshold nodes
+For each fault, log the event and reroute active neighbors
+Print the grid and offer the player a repair token
 
-🚫 You may NOT complete multiple sprints at once.  
-✅ Each sprint grade is **final**.
+Class Diagram:
 
----
+Future Improvements
+If I had more time, I would've definitely made a tutorial and more game like since it's kind of bare bones and I would've liked to add a weather system that affects the nodes like it might rain which would increase the chance of the node going faulty.
 
-## 🧪 Testing Expectations
-
-Testing is required every sprint.
-
-✅ Testing may include:
-- Running the program with different inputs
-- Print‑based testing
-- Driver program testing
-- Verifying logic and edge cases
-
-You should be able to explain:
-- What you tested
-- How you tested it
-- What you discovered or fixed
-
----
-
-## 🗂️ Required Project Components
-
-Your final project must include:
-
-- ✅ Multiple interacting Java classes
-- ✅ Encapsulation (`private` fields, appropriate getters/setters)
-- ✅ Arrays and/or ArrayLists
-- ✅ A purposeful **2D array**
-- ✅ A working driver program (`main`)
-- ✅ A class diagram matching your final code
-- ✅ Clear documentation
-- ✅ A program that runs and works
-
-Inheritance and interfaces are optional but encouraged.
-
----
-
-## 🤖 Using AI (Allowed, With Responsibility)
-
-You may use AI to:
-- Organize ideas
-- Plan sprints
-- Debug code
-- Suggest design improvements
-
-You must:
-- Document how you used AI
-- Review and evaluate AI suggestions
-- Understand and explain your final code
-
-AI should act like:
-> A junior developer you supervise — not something that builds the project for you.
-
----
-
-## 📘 Project Journal
-
-All planning, work logs, testing notes, and reflections live in **your project journal**.
-
-If it happened during this project, it should be documented there.
-
----
-
-## ✅ Final Submission Expectations
-
-By the end of the project:
-- Your program should run reliably
-- Your technical requirements should be met
-- Your code should be readable and organized
-- Your repository should look **professional**
-
----
-
-# ✨ Final Step: README Update (Very Important)
-
-When your project is complete, you must **rewrite this README**  
-so it reflects **your software**, not the assignment.
-
-Your final README should include:
-
----
-
-## 🔹 Project Title
-
-## 🔹 What This Software Does
-Explain your project in plain language.
-
-## 🔹 Who It’s For
-Describe the user and the problem being solved.
-
-## 🔹 How to Run the Program
-Clear steps so someone else can run your project.
-
-## 🔹 Technical Overview
-Brief description of:
-- Main classes
-- Key data structures
-- Program logic
-
-## 🔹 Class Diagram
-Include or link your final class diagram.
-
-## 🔹 Known Limitations / Future Improvements
-What works well, and what you would improve with more time.
-
----
-
-## 🎯 Final Reminder
-
-This repository represents **you as a developer**.
-
-Take pride in:
-- Your process
-- Your commits
-- Your code
-- Your documentation
-
-Build something real.  
-Build it thoughtfully.  
-Build it well.
